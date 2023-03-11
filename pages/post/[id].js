@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import OverLayLoader from "../../components/OverlayLoader";
 
 const decodeText = (text) => {
   const element = document.createElement("div");
@@ -49,9 +50,9 @@ const PostDetail = () => {
 
   if (loading === "LOADED")
     return (
-      <div className="w-screen flex flex-col justify-center items-center">
+      <div className="w-screen flex flex-col justify-center items-center text-gray-300">
         <div className="max-w-3xl w-full">
-          <h1 className="text-3xl font-bold text-green-500 my-5">
+          <h1 className="text-3xl text-center font-bold text-green-500 my-5">
             Detailed Post
           </h1>
           <h2 className="mb-3">
@@ -65,11 +66,13 @@ const PostDetail = () => {
           <h2 className="mb-3 text-green-500 text-lg font-medium">
             List of Comments
           </h2>
-          {post?.children.length === 0 && <div>There is not a single comment.</div>}
+          {post?.children.length === 0 && (
+            <div>There is not a single comment.</div>
+          )}
           <div>
             {post?.children?.length > 0 &&
               post.children.map((comment, idx) => (
-                <div key={comment?.id} className="mb-2.5">
+                <div key={comment?.id} className="mb-3.5">
                   {idx + 1}.{" "}
                   {comment.text
                     ? decodeText(comment.text)
@@ -80,12 +83,7 @@ const PostDetail = () => {
         </div>
       </div>
     );
-  else if (loading === "LOADING")
-    return (
-      <div className="w-screen h-20 flex flex-col justify-center items-center text-3xl">
-        Loading detailed post...
-      </div>
-    );
+  else if (loading === "LOADING") return <OverLayLoader />;
   else if (loading === "NO_DATA")
     return (
       <div className="w-screen h-20 flex flex-col justify-center items-center text-3xl">

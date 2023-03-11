@@ -1,19 +1,20 @@
 import styles from "@/styles/Home.module.css";
 import axios from "axios";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import debounce from "lodash/debounce";
+import { FaSearch } from "react-icons/fa";
 
 export default function HomeScreen() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState("");
   const [error, setError] = useState(false);
-  const [validation, setValidation] = useState(true);
 
-  const fetchSearchData = async () => {
+  const debouncedSearch = debounce(async (searchQuery) => {
     setLoading("LOADING");
     try {
-      const url = `http://hn.algolia.com/api/v1/search?query=${query}`;
+      const url = `http://hn.algolia.com/api/v1/search?query=${searchQuery}`;
       const response = await axios.get(url);
       console.log("respomse", response);
       if (response.data.hits?.length > 0) {
@@ -25,49 +26,34 @@ export default function HomeScreen() {
       setError(true);
       console.log("Error has occurred while fetching the searched result", err);
     }
+  }, 500);
+
+  const handleSearch = (e: any) => {
+    const searchQuery = e.target.value;
+    setQuery(searchQuery);
+    debouncedSearch(searchQuery);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (query) {
-      console.log("valid search");
-      fetchSearchData();
-      setValidation(true);
-    } else {
-      setResults([]);
-      setValidation(false);
-    }
-  };
   console.log("query", query);
 
   return (
-    <div className="w-screen flex flex-col justify-center items-center">
+    <div className="w-screen flex flex-col justify-center items-center text-gray-300">
       <h1 className="text-3xl font-bold text-green-500 my-5">
-        Hacker Home Screen
+        Hacker News Home
       </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="mb-5 max-w-3xl w-full flex flex-row justify-between text-xl font-medium"
-      >
+
+      <div className="mb-5 max-w-3xl w-full flex flex-row justify-between text-xl font-medium relative">
         <input
-          className="h-16 px-4 mr-2 w-4/5"
+          className="h-16 pl-12 mr-2 w-full border border-gray-300 focus:border-green-500 focus:outline-none"
           type="text"
-          placeholder="Search any articles"
+          placeholder="Search any articles..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleSearch}
         />
-        <button
-          type="submit"
-          className="bg-green-500 hover:bg-opacity-80 w-1/5 h-16 flex justify-center items-center text-gray-200"
-        >
-          Submit
-        </button>
-      </form>
-      {!validation && (
-        <h1 className="text-xl font-medium text-red-500 my-2">
-          Please, enter some query...
-        </h1>
-      )}
+        <div className="absolute left-4 top-5 mr-4">
+          <FaSearch className="text-green-500" />
+        </div>
+      </div>
       <div className="max-w-3xl w-full">
         {results?.length > 0 &&
           results.map(
@@ -87,7 +73,7 @@ export default function HomeScreen() {
               )
           )}
       </div>
-      {loading === "LOADING" && <div>Loading your result...</div>}
+      {loading === "LOADING" && <div>Loading your searched result...</div>}
       {loading === "NO_DATA" && <div>No data found for your search</div>}
       {error && <div>An error occurred while fetching the data.</div>}
     </div>
