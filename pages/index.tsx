@@ -8,6 +8,7 @@ export default function HomeScreen() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState("");
   const [error, setError] = useState(false);
+  const [validation, setValidation] = useState(true);
 
   const fetchSearchData = async () => {
     setLoading("LOADING");
@@ -31,6 +32,10 @@ export default function HomeScreen() {
     if (query) {
       console.log("valid search");
       fetchSearchData();
+      setValidation(true);
+    } else {
+      setResults([]);
+      setValidation(false);
     }
   };
   console.log("query", query);
@@ -58,6 +63,11 @@ export default function HomeScreen() {
           Submit
         </button>
       </form>
+      {!validation && (
+        <h1 className="text-xl font-medium text-red-500 my-2">
+          Please, enter some query...
+        </h1>
+      )}
       <div className="max-w-3xl w-full">
         {results?.length > 0 &&
           results.map(
