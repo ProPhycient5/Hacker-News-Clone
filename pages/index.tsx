@@ -28,8 +28,8 @@ export default function HomeScreen() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (query){
-      console.log("valid search")
+    if (query) {
+      console.log("valid search");
       fetchSearchData();
     }
   };
@@ -45,7 +45,7 @@ export default function HomeScreen() {
         className="mb-5 max-w-3xl w-full flex flex-row justify-between text-xl font-medium"
       >
         <input
-          className="h-16 px-4 mr-2 w-2/3"
+          className="h-16 px-4 mr-2 w-4/5"
           type="text"
           placeholder="Search any articles"
           value={query}
@@ -53,26 +53,29 @@ export default function HomeScreen() {
         />
         <button
           type="submit"
-          className="bg-green-500 hover:bg-opacity-80 w-1/3 h-16 flex justify-center items-center text-gray-200"
+          className="bg-green-500 hover:bg-opacity-80 w-1/5 h-16 flex justify-center items-center text-gray-200"
         >
           Submit
         </button>
       </form>
       <div className="max-w-3xl w-full">
         {results?.length > 0 &&
-          results.map((result, index) => (
-            <div
-              key={result["objectID"]}
-              className="w-full flex justify-start "
-            >
-              <Link
-                href={`/post/${result["objectID"]}`}
-                className="hover:text-green-500"
-              >
-                <span>{index + 1} .</span> <span>{result["title"]}</span>
-              </Link>
-            </div>
-          ))}
+          results.map(
+            (result) =>
+              result["title"] && (
+                <div
+                  key={result["objectID"]}
+                  className="w-full flex justify-start mb-2.5"
+                >
+                  <Link
+                    href={`/post/${result["objectID"]}`}
+                    className="hover:text-green-500"
+                  >
+                    <span>&#x2022; {result["title"]}</span>
+                  </Link>
+                </div>
+              )
+          )}
       </div>
       {loading === "LOADING" && <div>Loading your result...</div>}
       {loading === "NO_DATA" && <div>No data found for your search</div>}
