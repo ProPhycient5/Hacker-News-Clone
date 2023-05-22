@@ -14,7 +14,7 @@ export default function HomeScreen() {
   const debouncedSearch = debounce(async (searchQuery) => {
     setLoading("LOADING");
     try {
-      const url = `http://hn.algolia.com/api/v1/search?query=${searchQuery}`;
+      const url = `https://hn.algolia.com/api/v1/search?query=${searchQuery}`;
       const response = await axios.get(url);
       console.log("respomse", response);
       if (response.data.hits?.length > 0) {
