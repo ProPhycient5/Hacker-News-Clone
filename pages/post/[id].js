@@ -20,7 +20,7 @@ const PostDetail = () => {
   const getPost = async () => {
     setLoading("LOADING");
     try {
-      const url = `http://hn.algolia.com/api/v1/items/${id}`;
+      const url = `https://hn.algolia.com/api/v1/items/${id}`;
       const response = await axios.get(url);
       console.log("response from detail post", response);
       if (response["data"]) {
