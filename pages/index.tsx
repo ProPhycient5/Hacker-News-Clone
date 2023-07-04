@@ -16,15 +16,18 @@ export default function HomeScreen() {
     try {
       const url = `https://hn.algolia.com/api/v1/search?query=${searchQuery}`;
       const response = await axios.get(url);
-      console.log("respomse", response);
-      if (response.data.hits?.length > 0) {
+      console.log("response", response);
+      const hits = response.data.hits || [];
+      if (hits.length > 0) {
         setLoading("LOADED");
-        console.log("fetched data", response.data.hits);
-        setResults(response.data.hits);
-      } else setLoading("NO_DATA");
+        console.log("fetched data", hits);
+        setResults(hits);
+      } else {
+        setLoading("NO_DATA");
+      }
     } catch (err) {
       setError(true);
-      console.log("Error has occurred while fetching the searched result", err);
+      console.log("An error occurred while fetching the search results:", err);
     }
   }, 500);
 
