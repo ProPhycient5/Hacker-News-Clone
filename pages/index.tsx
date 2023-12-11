@@ -20,14 +20,12 @@ export default function HomeScreen() {
       const hits = response.data.hits || [];
       if (hits.length > 0) {
         setLoading("LOADED");
-        console.log("fetched data", hits);
         setResults(hits);
       } else {
         setLoading("NO_DATA");
       }
     } catch (err) {
       setError(true);
-      console.log("An error occurred while fetching the search results:", err);
     }
   }, 500);
 
